@@ -76,22 +76,21 @@ async function getRecipes() {
   // The rest of this method will be concerned with requesting the recipes
   // from the network
   // A2. TODO - Create an empty array to hold the recipes that you will fetch
-  const recipes = [];
+  let recipes = [];
 
   // A3. TODO - Return a new Promise. If you are unfamiliar with promises, MDN
   //            has a great article on them. A promise takes one parameter - A
   //            function (we call these callback functions). That function will
   //            take two parameters - resolve, and reject. These are functions
   //            you can call to either resolve the Promise or Reject it.
-  const promise = new Promise((resolve, reject) => {
+  const promise = new Promise(async (resolve, reject) => {
     /**************************/
     // A4-A11 will all be *inside* the callback function we passed to the Promise
     // we're returning
     /**************************/
-
     // A4. TODO - Loop through each recipe in the RECIPE_URLS array constant
     //            declared above
-    RECIPE_URLS.forEach(async (currentURL) => {
+    for (const currentURL of RECIPE_URLS) {
       // A5. TODO - Since we are going to be dealing with asynchronous code, create
       //            a try / catch block. A6-A9 will be in the try portion, A10-A11
       //            will be in the catch portion.
@@ -100,32 +99,32 @@ async function getRecipes() {
         //            article on fetch(). NOTE: Fetches are ASYNCHRONOUS, meaning that
         //            you must either use "await fetch(...)" or "fetch.then(...)". This
         //            function is using the async keyword so we recommend "await"
-        const response = await fetch(currentURL);
+        let response = await fetch(currentURL);
 
         // A7. TODO - For each fetch response, retrieve the JSON from it using .json().
         //            NOTE: .json() is ALSO asynchronous, so you will need to use
         //            "await" again
-        const newURL = await response.json();
+        let newURL = await response.json();
 
         // A8. TODO - Add the new recipe to the recipes array
-        recipes.push(currentURL);
+        recipes.push(newURL);
 
         // A9. TODO - Check to see if you have finished retrieving all of the recipes,
         //            if you have, then save the recipes to storage using the function
         //            we have provided. Then, pass the recipes array to the Promise's
         //            resolve() method.
-        if (recipes.length === RECIPE_URLS.length) {
+        if (recipes.length == RECIPE_URLS.length) {
           saveRecipesToStorage(recipes);
           resolve(recipes);
         }
-      } catch (err) {
+      } catch (error) {
         // A10. TODO - Log any errors from catch using console.error
-        console.error(err);
+        console.error(error);
 
         // A11. TODO - Pass any errors to the Promise's reject() function
-        reject(err);
+        reject(error);
       }
-    });
+    }
   });
   return promise;
 }
